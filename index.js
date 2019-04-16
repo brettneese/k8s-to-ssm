@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 const AWS = require("aws-sdk");
-const YAML = require("yaml");
+AWS.config.update({ region: process.env.AWS_DEFAULT_REGION || "us-east-1" });
+
+var yaml = require("js-yaml");
 const ssm = new AWS.SSM({ apiVersion: "2014-11-06" });
 
 let stdin = process.openStdin();
@@ -38,8 +40,11 @@ stdin.on("end", function() {
   try {
     let items = JSON.parse(data).items;
   } catch (e) {
-    // assume we've got yaml, not json
-    items = YAML.parse(data).items;
+    items = yaml.safeLoadAll(data);
+
+    if (items.items) {
+      items = items.items;
+    }
   }
 
   items.forEach(function(item) {
@@ -48,8 +53,14 @@ stdin.on("end", function() {
         addParam(
           item.metadata.name + "/" + key,
           item.data[key],
-          item.metadata.annotations["awsParam.Type"],
-          item.metadata.annotations["awsParam.allowUpdate"]
+          item.metadata.annotations &&
+            item.metadata.annotations["awsParam.Type"]
+            ? item.metadata.annotations["awsParam.Type"]
+            : null,
+          item.metadata.annotations &&
+            item.metadata.annotations["awsParam.allowUpdate"]
+            ? item.metadata.annotations["awsParam.allowUpdate"]
+            : null
         );
       });
     }
