@@ -1,0 +1,25 @@
+{
+  "name": "k8s-to-ssm",
+  "version": "0.0.1",
+  "description": "A simple CLI tool to upload K8S secrets to AWS SSM",
+  "main": "index.js",
+  "bin" : { "k8s2ssm" : "./index.js" },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brettneese/k8s-to-ssm.git"
+  },
+  "author": "Brett Neese <brett@neese.rocks>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/brettneese/k8s-to-ssm/issues"
+  },
+  "homepage": "https://github.com/brettneese/k8s-to-ssm#readme",
+  "dependencies": {
+    "aws-sdk": "^2.437.0",
+    "minimist": "^1.2.0",
+    "yaml": "^1.5.0"
+  }
+}
